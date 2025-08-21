@@ -15,4 +15,6 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 
 Route::resource('/payroll', PayrollController::class);
+
+
 Route::resource('/karyawan', KaryawanController::class);

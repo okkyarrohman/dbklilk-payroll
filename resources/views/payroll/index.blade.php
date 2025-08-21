@@ -14,18 +14,58 @@
                     </button>
 
                     <!-- Tombol Export -->
-                    <a href="#" class="btn btn-sm btn-primary">
+                    {{-- <a href="{{ route('payrolls.export') }}" class="btn btn-sm btn-primary">
                         <i class="fas fa-file-export"></i> Export
-                    </a>
+                    </a> --}}
 
                     <!-- Tombol Tambah Payroll -->
-                    <a href="#" class="btn btn-sm btn-info">
+                    <a href="{{ route('payroll.create') }}" class="btn btn-sm btn-info">
                         <i class="fas fa-plus"></i> Tambah Payroll
                     </a>
                 </div>
             </div>
 
             <div class="card-body">
+                <!-- Filter -->
+                <form method="GET" action="{{ route('payroll.index') }}" class="mb-3">
+                    <div class="row">
+                        <!-- Search Nama -->
+                        <div class="col-md-4">
+                            <input type="text" name="search" value="{{ request('search') }}" class="form-control"
+                                placeholder="Cari nama karyawan...">
+                        </div>
+
+                        <!-- Filter Bulan -->
+                        <div class="col-md-3">
+                            <select name="bulan" class="form-control">
+                                <option value="">-- Pilih Bulan --</option>
+                                @for ($i = 1; $i <= 12; $i++)
+                                    <option value="{{ $i }}" {{ request('bulan') == $i ? 'selected' : '' }}>
+                                        {{ \Carbon\Carbon::create()->month($i)->translatedFormat('F') }}
+                                    </option>
+                                @endfor
+                            </select>
+                        </div>
+
+                        <!-- Filter Tahun -->
+                        <div class="col-md-3">
+                            <select name="tahun" class="form-control">
+                                <option value="">-- Pilih Tahun --</option>
+                                @for ($y = now()->year; $y >= now()->year - 5; $y--)
+                                    <option value="{{ $y }}" {{ request('tahun') == $y ? 'selected' : '' }}>
+                                        {{ $y }}
+                                    </option>
+                                @endfor
+                            </select>
+                        </div>
+
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary btn-block">Filter</button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Table -->
                 <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
@@ -34,61 +74,41 @@
                             <th>Periode</th>
                             <th>Gaji Pokok</th>
                             <th>Tunjangan</th>
+                            <th>Potongan</th>
                             <th>Total</th>
-                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Data statis -->
-                        <tr>
-                            <td>1</td>
-                            <td>Budi Santoso</td>
-                            <td>Agustus 2025</td>
-                            <td>Rp 5.000.000</td>
-                            <td>Rp 1.000.000</td>
-                            <td><b>Rp 6.000.000</b></td>
-                            <td>
-                                <a href="#" class="btn btn-sm btn-info"><i class="fas fa-eye"></i></a>
-                                <a href="#" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
-                                <a href="#" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Siti Aminah</td>
-                            <td>Agustus 2025</td>
-                            <td>Rp 4.500.000</td>
-                            <td>Rp 800.000</td>
-                            <td><b>Rp 5.300.000</b></td>
-                            <td>
-                                <a href="#" class="btn btn-sm btn-info"><i class="fas fa-eye"></i></a>
-                                <a href="#" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
-                                <a href="#" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Andi Wijaya</td>
-                            <td>Agustus 2025</td>
-                            <td>Rp 6.000.000</td>
-                            <td>Rp 500.000</td>
-                            <td><b>Rp 6.500.000</b></td>
-                            <td>
-                                <a href="#" class="btn btn-sm btn-info"><i class="fas fa-eye"></i></a>
-                                <a href="#" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
-                                <a href="#" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
-                            </td>
-                        </tr>
+                        @forelse ($payrolls as $key => $payroll)
+                            <tr>
+                                <td>{{ $loop->iteration + ($payrolls->currentPage() - 1) * $payrolls->perPage() }}</td>
+                                <td>{{ $payroll->karyawan->nama }}</td>
+                                <td>{{ \Carbon\Carbon::parse($payroll->periode)->translatedFormat('F Y') }}</td>
+                                <td>Rp {{ number_format($payroll->gaji_pokok, 0, ',', '.') }}</td>
+                                <td>Rp {{ number_format($payroll->tunjangan, 0, ',', '.') }}</td>
+                                <td>Rp {{ number_format($payroll->potongan, 0, ',', '.') }}</td>
+                                <td><b>Rp {{ number_format($payroll->total_gaji, 0, ',', '.') }}</b></td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="8" class="text-center">Data tidak ditemukan</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
+
+                <!-- Pagination -->
+                <div class="mt-3">
+                    {{ $payrolls->withQueryString()->links() }}
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Modal Import -->
-    <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+    {{-- <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <form action="#" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('payrolls.import') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
@@ -107,5 +127,5 @@
                 </div>
             </form>
         </div>
-    </div>
+    </div> --}}
 @endsection

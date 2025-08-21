@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Payroll;
 use Illuminate\Http\Request;
 
 class PayrollController extends Controller
@@ -9,9 +10,33 @@ class PayrollController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('payroll.index');
+        $query = Payroll::with('karyawan');
+
+        // filter search nama
+        if ($request->filled('search')) {
+            $query->whereHas('karyawan', function ($q) use ($request) {
+                $q->where('nama', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        // filter bulan
+        if ($request->filled('bulan')) {
+            $query->whereMonth('periode', $request->bulan);
+        }
+
+        // filter tahun
+        if ($request->filled('tahun')) {
+            $query->whereYear('periode', $request->tahun);
+        }
+
+        $payrolls = $query->paginate(10);
+
+
+        return view('payroll.index', [
+            'payrolls' => $payrolls
+        ]);
     }
 
     /**
