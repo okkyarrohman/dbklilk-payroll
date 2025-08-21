@@ -12,6 +12,18 @@
                         <p>Dashboard</p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('home') }}" class="nav-link">
+                        <i class="nav-icon fas fa-home"></i>
+                        <p>Payroll</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('home') }}" class="nav-link">
+                        <i class="nav-icon fas fa-home"></i>
+                        <p>Karyawan</p>
+                    </a>
+                </li>
             </ul>
         </nav>
     </div>
