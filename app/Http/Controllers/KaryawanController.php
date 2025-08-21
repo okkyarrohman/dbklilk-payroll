@@ -11,7 +11,7 @@ class KaryawanController extends Controller
      */
     public function index()
     {
-        //
+        return view('karyawan.index');
     }
 
     /**
@@ -19,7 +19,7 @@ class KaryawanController extends Controller
      */
     public function create()
     {
-        //
+        return view('karyawan.create');
     }
 
     /**

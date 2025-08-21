@@ -13,13 +13,13 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('home') }}" class="nav-link">
+                    <a href="{{ route('payroll.index') }}" class="nav-link">
                         <i class="nav-icon fas fa-home"></i>
                         <p>Payroll</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('home') }}" class="nav-link">
+                    <a href="{{ route('karyawan.index') }}" class="nav-link">
                         <i class="nav-icon fas fa-home"></i>
                         <p>Karyawan</p>
                     </a>

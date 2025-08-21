@@ -11,7 +11,7 @@ class PayrollController extends Controller
      */
     public function index()
     {
-        //
+        return view('payroll.index');
     }
 
     /**
@@ -19,7 +19,7 @@ class PayrollController extends Controller
      */
     public function create()
     {
-        //
+        return view('payroll.create');
     }
 
     /**
@@ -35,7 +35,7 @@ class PayrollController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return view('payroll.show');
     }
 
     /**
@@ -43,7 +43,7 @@ class PayrollController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        return view('payroll.edit');
     }
 
     /**
