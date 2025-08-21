@@ -13,6 +13,16 @@ return new class extends Migration
     {
         Schema::create('karyawans', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('hris_id')->comment('Dari Karyawan_id di HRIS');
+            $table->string('nip');
+            $table->string('nama');
+            $table->string('email')->unique();
+            $table->string('telepon')->nullable();
+            $table->string('divisi');
+            $table->string('sub_divisi');
+            $table->text('cabang')->nullable();
+            $table->date('tanggal_mulai');
+            $table->date('tanggal_akhir');
             $table->timestamps();
         });
     }
